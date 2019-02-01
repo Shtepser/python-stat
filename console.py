@@ -1,20 +1,15 @@
-# PYTHON_PATH = "C:/Users/Пользователь/AppData/Local/Programs/Python/Python37-32"
+from pprint import pprint
+import analytic
 
 
-def add_loading(filename):
-    f = open('script.py', 'w')
-    f.write('print("script")')
-
-
-def exec_script():
-    exec(open("script.py").read())
-
-
-def main():
-    print("Main function")
-    add_loading("file")
-    exec_script()
+class ConsoleInterface:
+    def __init__(self):
+        print("Console interface for python-stat v 0.0.1")
+        analyser = analytic.Analytic(self)
+        analyser.load_source_data(input("Enter path to file"))
+        print("Checking data:")
+        pprint(analyser.source_data)
 
 
 if __name__ == '__main__':
-    main()
+    ConsoleInterface()
