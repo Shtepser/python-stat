@@ -1,4 +1,5 @@
 import pandas as pd
+import re
 
 
 class Analytic:
@@ -7,6 +8,16 @@ class Analytic:
         self.source_data = pd.DataFrame()
 
     def load_source_data(self, filepath):
+        file_ext = re.search(r'\.[\w\d]+$', filepath)[0] # расширение файла
+        types = {
+                ".xlsx" : lambda path: pd.read_excel(path),
+                ".xls"  : lambda path: pd.read_excel(path),
+                ".csv"  : lambda path: pd.read_csv(path)
+        }
         # TODO: добавить возможность загрузки .xls и .xlsx файлов, с возможностью автоматического определения
         # TODO: добавить обработку ошибки чтения/парсинга файла
-        self.source_data = pd.read_csv(filepath)
+
+        try:
+            self.source_data = types[file_ext](filepath)
+        except KeyError:
+            raise Exception("Unsupported data type")
