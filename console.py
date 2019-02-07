@@ -4,7 +4,7 @@ import analytic
 
 class ConsoleInterface:
     def __init__(self):
-        analyser = analytic.Analytic(self)
+        self.analyser = analytic.Analytic(self)
         self.run()
 
     def run(self):
@@ -16,9 +16,15 @@ class ConsoleInterface:
             except analytic.UnknownTypeError as e:
                 print("Unsupported file type: " + e.type)
                 continue
+            except FileNotFoundError:
+                print("File not found")
+                continue
             break
         print("Checking data:")
         pprint(self.analyser.source_data)
+        no_clusters = int(input("Enter number of clusters: "))
+        self.analyser.cluster(no_clusters)
+        pprint(self.analyser.clustered_data)
 
 
 if __name__ == '__main__':
