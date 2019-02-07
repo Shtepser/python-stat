@@ -2,6 +2,13 @@ import pandas as pd
 import re
 
 
+class UnknownTypeError(Exception):
+    """ Ошибка нераспознанного типа для открытия файла """
+
+    def __init__(self, type):
+        self.type = type
+
+
 class Analytic:
     def __init__(self, interface):
         self.interface = interface
@@ -20,6 +27,4 @@ class Analytic:
         try:
             self.source_data = types[file_ext](filepath)
         except KeyError:
-            class UnknownTypeError(Exception):
-                pass
-            raise UnknownTypeError("Unsupported data type")
+            raise UnknownTypeError(file_ext)
