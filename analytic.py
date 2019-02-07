@@ -20,4 +20,6 @@ class Analytic:
         try:
             self.source_data = types[file_ext](filepath)
         except KeyError:
-            raise Exception("Unsupported data type")
+            class UnknownTypeError(Exception):
+                pass
+            raise UnknownTypeError("Unsupported data type")
