@@ -1,33 +1,55 @@
 import pandas as pd
 import re
+from copy import deepcopy
 from sklearn.cluster import KMeans
 
 
 class UnknownTypeError(Exception):
     """ Ошибка нераспознанного типа для открытия файла """
 
-    def __init__(self, type):
-        self.type = type
+    def __init__(self, filetype):
+        self.filetype = filetype
+
+
+class IncorrectDataToClusterError(Exception):
+    """ Ошибка некорректно выбранных данных """
+    # "Incorrect data to cluster: values should be numeric"
+
+
+class IncorrectNumberOfClustersError(Exception):
+    """ Ошибка некорректного числа кластеров """
 
 
 class Analytic:
+    """
+        Аналитическое ядро программы, непосредственно хранящее и обрабатывающее данные.
+    """
     def __init__(self, interface):
         self.interface = interface
         self.source_data = pd.DataFrame()
         self.clustered_data = pd.DataFrame()
+        self.cols_to_clust = []
+        self.n_of_clusts = 1
 
     def load_source_data(self, filepath):
-        file_ext = re.search(r'\.[\w\d]+$', filepath)[0] # расширение файла
+        file_ext = re.search(r'\.[\w\d]+$', filepath)[0]  # расширение файла
         types = {
-                ".xlsx" : lambda path: pd.read_excel(path),
-                ".xls"  : lambda path: pd.read_excel(path),
-                ".csv"  : lambda path: pd.read_csv(path)
+            ".xlsx": lambda path: pd.read_excel(path),
+            ".xls": lambda path: pd.read_excel(path),
+            ".csv": lambda path: pd.read_csv(path)
         }
         try:
             self.source_data = types[file_ext](filepath)
         except KeyError:
             raise UnknownTypeError(file_ext)
+        self.cols_to_clust = deepcopy(self.source_data.columns)
 
-    def cluster(self, number_of_clusters):
+    def cluster(self):
         # TODO: добавить возможность выбора метода кластеризации
-        self.clustered_data = KMeans(n_clusters=number_of_clusters).fit(self.source_data).labels_
+        # TODO: добавить возможность выбора параметров (столбцов) для кластеризации
+        self.clustered_data = pd.DataFrame(self.source_data)
+        try:
+            # добавляем 1, т.к. изначально кластеры нумеруются с 0
+            self.clustered_data['cluster'] = KMeans(self.n_of_clusts).fit(self.source_data[self.cols_to_clust]).labels_ + 1
+        except ValueError:
+            raise IncorrectDataToClusterError
