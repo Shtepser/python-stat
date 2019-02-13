@@ -5,7 +5,7 @@ from sklearn.cluster import KMeans
 
 
 class UnknownTypeError(Exception):
-    """ Ошибка нераспознанного типа для открытия файла """
+    """ Ошибка нераспознанного типа для чтения/записи файла """
 
     def __init__(self, filetype):
         self.filetype = filetype
@@ -71,10 +71,22 @@ class Analytic:
     def cluster(self):
         # TODO: добавить возможность выбора метода кластеризации
         # TODO: добавить возможность выбора параметров (столбцов) для кластеризации
-        self.clustered_data = pd.DataFrame(self.source_data)
+        self.clustered_data = deepcopy(self.source_data)
         try:
             # добавляем 1, т.к. изначально кластеры нумеруются с 0
             self.clustered_data['cluster'] = KMeans(self.n_of_clusts) \
                                                  .fit(self.source_data[self.cols_to_clust]).labels_ + 1
         except ValueError:
             raise IncorrectDataToClusterError
+
+    def save_clustered_data(self, savepath):
+        file_ext = re.search(r'\.[\w\d]+$', savepath)[0]  # расширение файла
+        types = {
+            ".xlsx": lambda path: self.clustered_data.to_excel(path),
+            ".xls": lambda path: self.clustered_data.to_excel(path),
+            ".csv": lambda path: self.clustered_data.to_csv(path)
+        }
+        try:
+            types[file_ext](savepath)
+        except KeyError:
+            raise UnknownTypeError(file_ext)
