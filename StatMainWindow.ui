@@ -51,18 +51,18 @@
     <property name="title">
      <string>Данные</string>
     </property>
-    <addaction name="action"/>
-    <addaction name="action_2"/>
+    <addaction name="import_data_action"/>
+    <addaction name="export_data_action"/>
    </widget>
    <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="action">
+  <action name="import_data_action">
    <property name="text">
     <string>Импортировать</string>
    </property>
   </action>
-  <action name="action_2">
+  <action name="export_data_action">
    <property name="text">
     <string>Экспортировать</string>
    </property>

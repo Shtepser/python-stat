@@ -36,12 +36,12 @@ class Ui_MainWindow(object):
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
-        self.action = QtWidgets.QAction(MainWindow)
-        self.action.setObjectName("action")
-        self.action_2 = QtWidgets.QAction(MainWindow)
-        self.action_2.setObjectName("action_2")
-        self.menu.addAction(self.action)
-        self.menu.addAction(self.action_2)
+        self.import_data_action = QtWidgets.QAction(MainWindow)
+        self.import_data_action.setObjectName("import_data_action")
+        self.export_data_action = QtWidgets.QAction(MainWindow)
+        self.export_data_action.setObjectName("export_data_action")
+        self.menu.addAction(self.import_data_action)
+        self.menu.addAction(self.export_data_action)
         self.menubar.addAction(self.menu.menuAction())
 
         self.retranslateUi(MainWindow)
@@ -51,7 +51,7 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Stat"))
         self.menu.setTitle(_translate("MainWindow", "Данные"))
-        self.action.setText(_translate("MainWindow", "Импортировать"))
-        self.action_2.setText(_translate("MainWindow", "Экспортировать"))
+        self.import_data_action.setText(_translate("MainWindow", "Импортировать"))
+        self.export_data_action.setText(_translate("MainWindow", "Экспортировать"))
 
 

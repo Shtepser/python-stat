@@ -1,8 +1,10 @@
 import analytic
+from PyQt5.QtCore import QDir
 from PyQt5.QtWidgets import *
 from StatMainWindow import Ui_MainWindow
 import sys
 import pandas as pd
+
 
 class WindowInterface(QMainWindow, Ui_MainWindow):
 
@@ -11,23 +13,15 @@ class WindowInterface(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.analyser = analytic.Analytic(self)
 
+        self.import_data_action.triggered.connect(self.load_source_data)
+
         self.show()
 
-    def view_source_data(self):
-        df = self.analyser.source_data
-        headers = df.columns.values.tolist()
-
-        # Отображение данных на виджете
-        table = self.source_data_widget
-        table.setColumnCount(len(headers))
-        table.setHorizontalHeaderLabels(headers)
-
-        for i, row in df.iterrows():
-            # Добавление строки
-            table.setRowCount(table.rowCount() + 1)
-
-            for j in range(table.columnCount()):
-                table.setItem(i, j, QTableWidgetItem(str(row[j])))
+    def show_error(self, message):
+        msg = QMessageBox(self)
+        msg.setText(message)
+        msg.setIcon(QMessageBox.Critical)
+        msg.show()
 
     # noinspection PyMethodMayBeStatic
     def view_data(self, df: pd.DataFrame, qtablewidget: QTableWidget):
@@ -42,18 +36,21 @@ class WindowInterface(QMainWindow, Ui_MainWindow):
                 qtablewidget.setItem(i, j, QTableWidgetItem(str(row[j])))
 
     def load_source_data(self):
-        self.analyser.filepath, _ = QFileDialog.getOpenFileName(self, "Open file", "", "Text documents (*.csv)", "All files (*.*)")
+        path = QFileDialog.getOpenFileName(self, "Выберите файл с данными для загрузки", QDir.currentPath(),
+                                           "Электронные таблицы (*.csv *.xls *.xlsx);;Все файлы (*.*)")[0]
+        if path:
+            self.analyser.set_filepath(path)
+            try:
+                self.analyser.load_source_data()
+            except analytic.UnknownTypeError as e:
+                self.show_error("Unsupported file type: " + e.filetype)
+            except FileNotFoundError:
+                self.show_error("File not found")
+            self.view_data(self.analyser.source_data, self.source_data_widget)
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     app.setApplicationName("Python-stat")
-
     window = WindowInterface()
-    # tmp
-    window.load_source_data()
-    # window.analyser.filepath = "sample_table.csv"
-    window.analyser.load_source_data()
-    window.view_data(window.analyser.source_data, window.source_data_widget)
-    # end tmp
     sys.exit(app.exec_())
