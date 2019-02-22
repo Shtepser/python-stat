@@ -19,13 +19,16 @@ class Ui_MainWindow(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setEnabled(True)
         self.centralwidget.setObjectName("centralwidget")
-        self.source_data_widget = QtWidgets.QTableWidget(self.centralwidget)
-        self.source_data_widget.setGeometry(QtCore.QRect(10, 10, 781, 531))
-        self.source_data_widget.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
-        self.source_data_widget.setShowGrid(True)
-        self.source_data_widget.setObjectName("source_data_widget")
-        self.source_data_widget.setColumnCount(0)
-        self.source_data_widget.setRowCount(0)
+        self.dataTabs = QtWidgets.QTabWidget(self.centralwidget)
+        self.dataTabs.setGeometry(QtCore.QRect(20, 0, 761, 531))
+        self.dataTabs.setObjectName("dataTabs")
+        self.readme_tab = QtWidgets.QWidget()
+        self.readme_tab.setObjectName("readme_tab")
+        self.readme_browser = QtWidgets.QTextBrowser(self.readme_tab)
+        self.readme_browser.setGeometry(QtCore.QRect(10, 9, 721, 481))
+        self.readme_browser.setMinimumSize(QtCore.QSize(200, 200))
+        self.readme_browser.setObjectName("readme_browser")
+        self.dataTabs.addTab(self.readme_tab, "")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 21))
@@ -45,11 +48,19 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menu.menuAction())
 
         self.retranslateUi(MainWindow)
+        self.dataTabs.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Stat"))
+        self.readme_browser.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Здесь будет инструкция пользователя. Когда-нибудь.</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Изначально она была добавлена как костыль, но всё решилось</p></body></html>"))
+        self.dataTabs.setTabText(self.dataTabs.indexOf(self.readme_tab), _translate("MainWindow", "Стартовая страница"))
         self.menu.setTitle(_translate("MainWindow", "Данные"))
         self.import_data_action.setText(_translate("MainWindow", "Импортировать"))
         self.export_data_action.setText(_translate("MainWindow", "Экспортировать"))

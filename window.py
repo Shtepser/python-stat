@@ -1,3 +1,5 @@
+from PyQt5 import QtWidgets, QtCore
+
 import analytic
 from PyQt5.QtCore import QDir
 from PyQt5.QtWidgets import *
@@ -13,6 +15,8 @@ class WindowInterface(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.analyser = analytic.Analytic(self)
 
+        # self.tabs_names_index = {}
+
         self.import_data_action.triggered.connect(self.load_source_data)
 
         self.show()
@@ -23,9 +27,14 @@ class WindowInterface(QMainWindow, Ui_MainWindow):
         msg.setIcon(QMessageBox.Critical)
         msg.show()
 
-    # noinspection PyMethodMayBeStatic
-    def view_data(self, df: pd.DataFrame, qtablewidget: QTableWidget):
+    def view_data(self, df: pd.DataFrame, label: str, name: str):
+        qtablewidget = QtWidgets.QTableWidget()
         headers = df.columns.values.tolist()
+        qtablewidget.setObjectName(name)
+        qtablewidget.setGeometry(QtCore.QRect(5, 10, 741, 491))
+        qtablewidget.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+        qtablewidget.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+        qtablewidget.setShowGrid(True)
         qtablewidget.setColumnCount(len(headers))
         qtablewidget.setHorizontalHeaderLabels(headers)
 
@@ -34,6 +43,8 @@ class WindowInterface(QMainWindow, Ui_MainWindow):
             qtablewidget.setRowCount(qtablewidget.rowCount() + 1)
             for j in range(qtablewidget.columnCount()):
                 qtablewidget.setItem(i, j, QTableWidgetItem(str(row[j])))
+
+        self.dataTabs.addTab(qtablewidget, label)
 
     def load_source_data(self):
         path = QFileDialog.getOpenFileName(self, "Выберите файл с данными для загрузки", QDir.currentPath(),
@@ -46,7 +57,7 @@ class WindowInterface(QMainWindow, Ui_MainWindow):
                 self.show_error("Unsupported file type: " + e.filetype)
             except FileNotFoundError:
                 self.show_error("File not found")
-            self.view_data(self.analyser.source_data, self.source_data_widget)
+            self.view_data(self.analyser.source_data, "Исходные данные", "source_data")
 
 
 if __name__ == '__main__':

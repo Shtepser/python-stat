@@ -21,21 +21,47 @@
    <property name="enabled">
     <bool>true</bool>
    </property>
-   <widget class="QTableWidget" name="source_data_widget">
+   <widget class="QTabWidget" name="dataTabs">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>781</width>
+      <x>20</x>
+      <y>0</y>
+      <width>761</width>
       <height>531</height>
      </rect>
     </property>
-    <property name="horizontalScrollBarPolicy">
-     <enum>Qt::ScrollBarAsNeeded</enum>
+    <property name="currentIndex">
+     <number>0</number>
     </property>
-    <property name="showGrid">
-     <bool>true</bool>
-    </property>
+    <widget class="QWidget" name="readme_tab">
+     <attribute name="title">
+      <string>Стартовая страница</string>
+     </attribute>
+     <widget class="QTextBrowser" name="readme_browser">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>9</y>
+        <width>721</width>
+        <height>481</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>200</width>
+        <height>200</height>
+       </size>
+      </property>
+      <property name="html">
+       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Здесь будет инструкция пользователя. Когда-нибудь.&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Изначально она была добавлена как костыль, но всё решилось&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
