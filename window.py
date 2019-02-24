@@ -25,21 +25,23 @@ class WindowInterface(QMainWindow, Ui_MainWindow):
 
     def view_data(self, df: pd.DataFrame, label: str, name: str):
         if name in self.tabs_names.keys():
-            self.dataTabs.removeTab(self.dataTabs.indexOf(self.tabs_names[name]))
-        self.tabs_names[name] = self.DataFrameView(df, name)
-        self.dataTabs.addTab(self.tabs_names[name], label)
+            self.tabs_names[name].set_dataframe(df)
+            self.dataTabs.setTabText(self.dataTabs.indexOf(self.tabs_names[name]), label)
+        else:
+            self.tabs_names[name] = self.DataFrameView(df, name)
+            self.dataTabs.addTab(self.tabs_names[name], label)
 
     def load_source_data(self):
         path = QFileDialog.getOpenFileName(self, "Выберите файл с данными для загрузки", QtCore.QDir.currentPath(),
-                                           "Электронные таблицы (*.csv *.xls *.xlsx);;Все файлы (*.*)")[0]
+                                           "Электронные таблицы (*.csv *.xls *.xlsx);;Все файлы (*)")[0]
         if path:
             self.analyser.set_filepath(path)
             try:
                 self.analyser.load_source_data()
             except analytic.UnknownTypeError as e:
-                self.show_error("Unsupported file type: " + e.filetype)
+                self.show_error("Неподдерживаемый тип файла: " + e.filetype)
             except FileNotFoundError:
-                self.show_error("File not found")
+                self.show_error("Файл не найден")
             self.view_data(self.analyser.source_data, "Исходные данные", "source_data")
 
     class DataFrameView(QTableView):
@@ -47,6 +49,9 @@ class WindowInterface(QMainWindow, Ui_MainWindow):
             QTableView.__init__(self)
             self.setModel(self.DataFrameModel(data, self))
             self.setObjectName(name)
+
+        def set_dataframe(self, new_df: pd.DataFrame):
+            self.setModel(self.DataFrameModel(new_df, self))
 
         class DataFrameModel(QtCore.QAbstractTableModel):
             def __init__(self, df: pd.DataFrame, parent=None):
