@@ -1,5 +1,5 @@
 import analytic
-from PyQt5 import QtCore
+from PyQt5 import QtCore, QtGui
 from PyQt5.QtWidgets import *
 from StatMainWindow import Ui_MainWindow
 from StatClusterSettingsDial import Ui_ClusterSettingsDial
@@ -47,7 +47,27 @@ class WindowInterface(QMainWindow, Ui_MainWindow):
             self.view_data(self.analyser.source_data, "Исходные данные", "source_data")
 
     def cluster(self):
-        pass
+        def present_results():
+            pass
+
+        self.show_sett_dial()
+        # self.analyser.cluster()
+        present_results()
+
+        # перенести в show_diag()
+
+    def show_sett_dial(self):
+        report_ok = lambda : print("Ok")
+        report_cancel = lambda : print("Cancel")
+        diag = QDialog(self)
+        diag.ui = Ui_ClusterSettingsDial()
+        diag.ui.setupUi(diag)
+        diag.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+
+        diag.ui.clusterRunButtons.accepted.connect(report_ok)
+        diag.ui.clusterRunButtons.rejected.connect(report_cancel)
+
+        diag.exec_()
 
     class DataFrameView(QTableView):
         def __init__(self, data: pd.DataFrame, name: str):
