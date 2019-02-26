@@ -2,6 +2,7 @@ import analytic
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import *
 from StatMainWindow import Ui_MainWindow
+from StatClusterSettingsDial import Ui_ClusterSettingsDial
 import sys
 import pandas as pd
 
@@ -15,6 +16,7 @@ class WindowInterface(QMainWindow, Ui_MainWindow):
         self.tabs_names = {}
 
         self.import_data_action.triggered.connect(self.load_source_data)
+        self.clusterAction.triggered.connect(self.cluster)
         self.show()
 
     def show_error(self, message):
@@ -43,6 +45,9 @@ class WindowInterface(QMainWindow, Ui_MainWindow):
             except FileNotFoundError:
                 self.show_error("Файл не найден")
             self.view_data(self.analyser.source_data, "Исходные данные", "source_data")
+
+    def cluster(self):
+        pass
 
     class DataFrameView(QTableView):
         def __init__(self, data: pd.DataFrame, name: str):
