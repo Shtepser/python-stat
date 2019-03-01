@@ -8,6 +8,10 @@ import pandas as pd
 
 
 class WindowInterface(QMainWindow, Ui_MainWindow):
+
+    class ClustSettingsDialog(QDialog):
+        pass
+
     def __init__(self):
         super().__init__()
         self.setupUi(self)
