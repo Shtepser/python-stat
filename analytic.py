@@ -65,6 +65,9 @@ class Analytic:
             if col not in self.cols_to_clust:
                 self.cols_to_clust.append(col)
 
+    def set_cols_to_clust(self, columns):
+        self.cols_to_clust = columns
+
     def set_n_of_clusts(self, num):
         self.n_of_clusts = num
 

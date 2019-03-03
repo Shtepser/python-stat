@@ -2,13 +2,12 @@ import analytic
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtWidgets import *
 from StatMainWindow import Ui_MainWindow
-from StatClusterSettingsDial import Ui_ClusterSettingsDial
+from ClustSettDialog import ClustSettDialog
 import sys
 import pandas as pd
 
 
 class WindowInterface(QMainWindow, Ui_MainWindow):
-
     class ClustSettingsDialog(QDialog):
         pass
 
@@ -61,17 +60,12 @@ class WindowInterface(QMainWindow, Ui_MainWindow):
         # перенести в show_diag()
 
     def show_sett_dial(self):
-        report_ok = lambda : print("Ok")
-        report_cancel = lambda : print("Cancel")
-        diag = QDialog(self)
-        diag.ui = Ui_ClusterSettingsDial()
-        diag.ui.setupUi(diag)
-        diag.setAttribute(QtCore.Qt.WA_DeleteOnClose)
-
-        diag.ui.clusterRunButtons.accepted.connect(report_ok)
-        diag.ui.clusterRunButtons.rejected.connect(report_cancel)
-
-        diag.exec_()
+        cont, params = ClustSettDialog.get_clust_settings(self.analyser.source_data.columns)
+        if cont:
+            self.analyser.set_n_of_clusts(params['n_of_clusts'])
+            self.analyser.set_cols_to_clust(params['cols_to_clust'])
+            self.analyser.cluster()
+            print(self.analyser.clustered_data)
 
     class DataFrameView(QTableView):
         def __init__(self, data: pd.DataFrame, name: str):
