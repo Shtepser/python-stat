@@ -8,8 +8,6 @@ import pandas as pd
 
 
 class WindowInterface(QMainWindow, Ui_MainWindow):
-    class ClustSettingsDialog(QDialog):
-        pass
 
     def __init__(self):
         super().__init__()
@@ -19,7 +17,7 @@ class WindowInterface(QMainWindow, Ui_MainWindow):
         self.tabs_names = {}
 
         self.import_data_action.triggered.connect(self.load_source_data)
-        self.clusterAction.triggered.connect(self.cluster)
+        self.clusterAction.triggered.connect(self.run_cluster)
         self.show()
 
     def show_error(self, message):
@@ -49,23 +47,24 @@ class WindowInterface(QMainWindow, Ui_MainWindow):
                 self.show_error("Файл не найден")
             self.view_data(self.analyser.source_data, "Исходные данные", "source_data")
 
-    def cluster(self):
+    def run_cluster(self):
         def present_results():
-            pass
+            self.view_data(self.analyser.clustered_data, "Кластеризованные данные", "clustered_data")
 
-        self.show_sett_dial()
-        # self.analyser.cluster()
-        present_results()
-
-        # перенести в show_diag()
-
-    def show_sett_dial(self):
         cont, params = ClustSettDialog.get_clust_settings(self.analyser.source_data.columns)
         if cont:
             self.analyser.set_n_of_clusts(params['n_of_clusts'])
             self.analyser.set_cols_to_clust(params['cols_to_clust'])
-            self.analyser.cluster()
-            print(self.analyser.clustered_data)
+            # TODO: Тут должен быть обработчик исключения из cluster()
+            try:
+                self.analyser.cluster()
+            except analytic.IncorrectDataToClusterError:
+                self.show_error("Некорректные данные для кластеризации: значения должны быть числами!")
+                return
+            except analytic.IncorrectNumberOfClustersError:
+                self.show_error("Некорректное число кластеров")
+                return
+            present_results()
 
     class DataFrameView(QTableView):
         def __init__(self, data: pd.DataFrame, name: str):
