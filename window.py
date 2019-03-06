@@ -3,8 +3,12 @@ from PyQt5 import QtCore, QtGui
 from PyQt5.QtWidgets import *
 from StatMainWindow import Ui_MainWindow
 from ClustSettDialog import ClustSettDialog
+from ColumnsScatterPlotDialog import Ui_Dialog
 import sys
 import pandas as pd
+
+from scipy.cluster.hierarchy import dendrogram
+from matplotlib import pyplot as plt
 
 
 class WindowInterface(QMainWindow, Ui_MainWindow):
@@ -17,8 +21,11 @@ class WindowInterface(QMainWindow, Ui_MainWindow):
         self.tabs_names = {}
 
         self.import_data_action.triggered.connect(self.load_source_data)
-        self.export_data_action.triggered.connect(self.save_data)
+        self.export_marks_action.triggered.connect(self.save_marks)
+        self.export_distance_action.triggered.connect(self.save_distances)
         self.clusterAction.triggered.connect(self.run_cluster)
+        self.dendrogram_action.triggered.connect(self.present_dendrogram)
+        self.scatterplot_action.triggered.connect(self.present_scatterplot)
 
         self.show()
 
@@ -69,7 +76,7 @@ class WindowInterface(QMainWindow, Ui_MainWindow):
                 self.report_error("Файл не найден")
             self.view_data(self.analyser.source_data, "Исходные данные", "source_data")
 
-    def save_data(self):
+    def save_marks(self):
         """
         Сохраняет таблицу с кластеризованными данными
         TODO: Добавить работу одновременно с несколькими результатами кластеризации
@@ -80,6 +87,20 @@ class WindowInterface(QMainWindow, Ui_MainWindow):
         if path:
             try:
                 self.analyser.save_clustered_data(path)
+            except analytic.UnknownTypeError as e:
+                self.report_error("Неподдерживаемый тип файла: " + e.filetype)
+                return
+            except Exception as e:
+                self.report_error(str(e))
+                return
+            self.show_message("Файл успешно сохранён")
+
+    def save_distances(self):
+        path = QFileDialog.getSaveFileName(self, "Выберите место для сохранения файла", QtCore.QDir.currentPath(),
+                                           "CSV-файл (*.csv) ;;Лист Excel (*.xls) ;; Лист Excel (*.xlsx)")[0]
+        if path:
+            try:
+                self.analyser.save_data(path, pd.DataFrame(self.analyser.distance_matrix))
             except analytic.UnknownTypeError as e:
                 self.report_error("Неподдерживаемый тип файла: " + e.filetype)
                 return
@@ -123,6 +144,26 @@ class WindowInterface(QMainWindow, Ui_MainWindow):
                 self.report_error("Некорректное число кластеров")
                 return
             present_results()
+
+    def present_dendrogram(self):
+        """
+        Выводит дендрограмму кластеров
+        TODO: сделать показ не в отдельном окне, а во вкладке
+        """
+
+        figure = plt.figure(figsize=(12, 5))
+        try:
+            dn = dendrogram(self.analyser.distance_matrix, labels=self.analyser.source_data.index)
+        except TypeError:
+            self.report_error("Матрица расстояний имеет недопустимый вид!")
+            return
+        plt.show()
+
+    def present_scatterplot(self):
+        """
+        Выводит график рассеяния данных
+        """
+        pass
 
     class DataFrameView(QTableView):
         def __init__(self, data: pd.DataFrame, name: str):

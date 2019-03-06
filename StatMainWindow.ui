@@ -56,9 +56,9 @@
        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Cantarell'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt;&quot;&gt;Здесь будет инструкция пользователя. Когда-нибудь.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt;&quot;&gt;Изначально она была добавлена как костыль, но всё решилось&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Здесь будет инструкция пользователя. Когда-нибудь.&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; color:#000000;&quot;&gt;В настоящий момент программа реализует иерархическую кластеризацию&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
      </widget>
     </widget>
@@ -70,21 +70,36 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>28</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="dataMenu">
     <property name="title">
      <string>Данные</string>
     </property>
+    <widget class="QMenu" name="export_data_menu">
+     <property name="title">
+      <string>Экспортировать</string>
+     </property>
+     <addaction name="export_marks_action"/>
+     <addaction name="export_distance_action"/>
+    </widget>
     <addaction name="import_data_action"/>
-    <addaction name="export_data_action"/>
+    <addaction name="export_data_menu"/>
    </widget>
    <widget class="QMenu" name="analysisMenu">
     <property name="title">
      <string>Анализ</string>
     </property>
+    <widget class="QMenu" name="plots_menu">
+     <property name="title">
+      <string>График</string>
+     </property>
+     <addaction name="scatterplot_action"/>
+     <addaction name="dendrogram_action"/>
+    </widget>
     <addaction name="clusterAction"/>
+    <addaction name="plots_menu"/>
    </widget>
    <addaction name="dataMenu"/>
    <addaction name="analysisMenu"/>
@@ -95,14 +110,29 @@ p, li { white-space: pre-wrap; }
     <string>Импортировать</string>
    </property>
   </action>
-  <action name="export_data_action">
-   <property name="text">
-    <string>Экспортировать</string>
-   </property>
-  </action>
   <action name="clusterAction">
    <property name="text">
     <string>Кластеризовать</string>
+   </property>
+  </action>
+  <action name="scatterplot_action">
+   <property name="text">
+    <string>Диаграмма рассеяния</string>
+   </property>
+  </action>
+  <action name="dendrogram_action">
+   <property name="text">
+    <string>Дендрограмма</string>
+   </property>
+  </action>
+  <action name="export_marks_action">
+   <property name="text">
+    <string>Таблицу с метками кластеров</string>
+   </property>
+  </action>
+  <action name="export_distance_action">
+   <property name="text">
+    <string>Матрицу расстояний</string>
    </property>
   </action>
  </widget>

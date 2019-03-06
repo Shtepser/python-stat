@@ -58,6 +58,7 @@ class Ui_ClusterSettingsDial(QtWidgets.QDialog):
         self.setWindowTitle(_translate("ClusterSettingsDial", "GroupBox"))
         self.nOfClustersLabel.setText(_translate("ClusterSettingsDial", "Число кластеров"))
 
+
 if __name__ == "__main__":
     print("Test")
     Ui_ClusterSettingsDial()

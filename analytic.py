@@ -37,7 +37,7 @@ class Analytic:
         self.filepath = ""
         self.source_data = pd.DataFrame()
         self.clustered_data = pd.DataFrame()
-        self.distance_matrix = np.zeros(1)
+        self.distance_matrix = False
 
         self.cols_to_clust = []
         self.n_of_clusts = 1
@@ -100,12 +100,25 @@ class Analytic:
         except ValueError:
             raise IncorrectDataToClusterError
 
+    # deprecated
     def save_clustered_data(self, savepath):
         file_ext = re.search(r'\.[\w\d]+$', savepath)[0]  # расширение файла
         types = {
             ".xlsx": lambda path: self.clustered_data.to_excel(path),
             ".xls": lambda path: self.clustered_data.to_excel(path),
             ".csv": lambda path: self.clustered_data.to_csv(path)
+        }
+        try:
+            types[file_ext](savepath)
+        except KeyError:
+            raise UnknownTypeError(file_ext)
+
+    def save_data(self, savepath, data: pd.DataFrame):
+        file_ext = re.search(r'\.[\w\d]+$', savepath)[0]  # расширение файла
+        types = {
+            ".xlsx": lambda path: data.to_excel(path),
+            ".xls": lambda path: data.to_excel(path),
+            ".csv": lambda path: data.to_csv(path)
         }
         try:
             types[file_ext](savepath)
