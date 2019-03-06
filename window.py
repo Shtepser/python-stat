@@ -3,7 +3,6 @@ from PyQt5 import QtCore, QtGui
 from PyQt5.QtWidgets import *
 from StatMainWindow import Ui_MainWindow
 from ClustSettDialog import ClustSettDialog
-from ColumnsScatterPlotDialog import Ui_Dialog
 import sys
 import pandas as pd
 
