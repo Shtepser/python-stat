@@ -155,7 +155,7 @@ class WindowInterface(QMainWindow, Ui_MainWindow):
 
         figure = plt.figure(figsize=(12, 5))
         try:
-            dn = dendrogram(self.analyser.distance_matrix, labels=self.analyser.source_data.index)
+            dn = dendrogram(self.analyser.linkage_matrix, labels=self.analyser.source_data.index)
         except TypeError:
             self.report_error("Матрица расстояний имеет недопустимый вид!")
             return

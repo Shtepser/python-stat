@@ -1,6 +1,7 @@
 import pandas as pd
 import re
 from copy import deepcopy
+from scipy.spatial.distance import pdist, squareform
 from scipy.cluster.hierarchy import linkage, fcluster
 import numpy as np
 
@@ -37,6 +38,7 @@ class Analytic:
         self.filepath = ""
         self.source_data = pd.DataFrame()
         self.clustered_data = pd.DataFrame()
+        self.linkage_matrix = False
         self.distance_matrix = False
 
         self.cols_to_clust = []
@@ -88,8 +90,9 @@ class Analytic:
         # TODO: добавить возможность выбора параметров (столбцов) для кластеризации
         self.clustered_data = deepcopy(self.source_data)
         try:
-            self.distance_matrix = linkage(self.source_data[self.cols_to_clust].to_numpy(), method=self.method, metric=self.metric)
-            self.clustered_data['cluster'] = fcluster(self.distance_matrix, t=self.n_of_clusts, criterion=self.criterion)
+            self.distance_matrix = squareform(pdist(X=self.source_data[self.cols_to_clust].to_numpy(), metric=self.metric))
+            self.linkage_matrix = linkage(self.source_data[self.cols_to_clust].to_numpy(), method=self.method, metric=self.metric)
+            self.clustered_data['cluster'] = fcluster(self.linkage_matrix, t=self.n_of_clusts, criterion=self.criterion)
 
             # self.clustered_data['cluster'] = fclusterdata(self.source_data[self.cols_to_clust].to_numpy(),
             #                                              t=self.n_of_clusts, criterion=self.criterion,
