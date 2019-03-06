@@ -17,16 +17,38 @@ class WindowInterface(QMainWindow, Ui_MainWindow):
         self.tabs_names = {}
 
         self.import_data_action.triggered.connect(self.load_source_data)
+        self.export_data_action.triggered.connect(self.save_data)
         self.clusterAction.triggered.connect(self.run_cluster)
+
         self.show()
 
-    def show_error(self, message):
+    def report_error(self, error_message):
+        """
+        Показывает окно с сообщением об ошибке
+        :param error_message: Текст сообщения об ошибке
+        """
         msg = QMessageBox(self)
-        msg.setText(message)
+        msg.setText(error_message)
         msg.setIcon(QMessageBox.Critical)
         msg.show()
 
+    def show_message(self, message):
+        """
+        Показывает пользователю сообщение
+        :param message: текст сообщения
+        """
+        msg = QMessageBox(self)
+        msg.setText(message)
+        msg.setIcon(QMessageBox.Information)
+        msg.show()
+
     def view_data(self, df: pd.DataFrame, label: str, name: str):
+        """
+        Отображает данные (pandas.DataFrame) в новой вкладке
+        :param df: pandas.DataFrame, который будет отображаться
+        :param label: отображаемое имя данных
+        :param name: название данных (для дальнейшего обращения к ним)
+        """
         if name in self.tabs_names.keys():
             self.tabs_names[name].set_dataframe(df)
             self.dataTabs.setTabText(self.dataTabs.indexOf(self.tabs_names[name]), label)
@@ -42,27 +64,63 @@ class WindowInterface(QMainWindow, Ui_MainWindow):
             try:
                 self.analyser.load_source_data()
             except analytic.UnknownTypeError as e:
-                self.show_error("Неподдерживаемый тип файла: " + e.filetype)
+                self.report_error("Неподдерживаемый тип файла: " + e.filetype)
             except FileNotFoundError:
-                self.show_error("Файл не найден")
+                self.report_error("Файл не найден")
             self.view_data(self.analyser.source_data, "Исходные данные", "source_data")
+
+    def save_data(self):
+        """
+        Сохраняет таблицу с кластеризованными данными
+        TODO: Добавить работу одновременно с несколькими результатами кластеризации
+        TODO: Добавить возможность сохранения графиков и диаграмм
+        """
+        path = QFileDialog.getSaveFileName(self, "Выберите место для сохранения файла", QtCore.QDir.currentPath(),
+                                           "CSV-файл (*.csv) ;;Лист Excel (*.xls) ;; Лист Excel (*.xlsx)")[0]
+        if path:
+            try:
+                self.analyser.save_clustered_data(path)
+            except analytic.UnknownTypeError as e:
+                self.report_error("Неподдерживаемый тип файла: " + e.filetype)
+                return
+            except Exception as e:
+                self.report_error(str(e))
+                return
+            self.show_message("Файл успешно сохранён")
 
     def run_cluster(self):
         def present_results():
-            self.view_data(self.analyser.clustered_data, "Кластеризованные данные", "clustered_data")
+            """
+            Представляет результат кластерного анализа пользователю
+            TODO: Выбор вариантов представления (таблица с метками, график, дерево)
+            """
+            self.view_data(pd.DataFrame(self.analyser.distance_matrix),     # Привет, костыль! - по-хорошему, TODO:
+                           # сделать так, чтобы view_data работал не только с pandas Dataframe, но и с ndarray
+                           "Матрица расстояний, метод: " + self.analyser.method,
+                           "distance_matrix")
+            self.view_data(self.analyser.clustered_data,
+                           "Метки кластеров: n = " + str(self.analyser.n_of_clusts),
+                           "clustered_data")
 
-        cont, params = ClustSettDialog.get_clust_settings(self.analyser.source_data.columns)
+        options = {"data_columns": self.analyser.source_data.columns,
+                   "criterions": analytic.CRITERIONS,
+                   "methods": analytic.METHODS,
+                   "metrics": analytic.METRICS}
+
+        cont, params = ClustSettDialog.get_clust_settings(options)
         if cont:
             self.analyser.set_n_of_clusts(params['n_of_clusts'])
             self.analyser.set_cols_to_clust(params['cols_to_clust'])
-            # TODO: Тут должен быть обработчик исключения из cluster()
+            self.analyser.method = params['method']
+            self.analyser.metric = params['metric']
+            self.analyser.criterion = params['criterion']
             try:
                 self.analyser.cluster()
             except analytic.IncorrectDataToClusterError:
-                self.show_error("Некорректные данные для кластеризации: значения должны быть числами!")
+                self.report_error("Некорректные данные для кластеризации: значения должны быть числами!")
                 return
             except analytic.IncorrectNumberOfClustersError:
-                self.show_error("Некорректное число кластеров")
+                self.report_error("Некорректное число кластеров")
                 return
             present_results()
 

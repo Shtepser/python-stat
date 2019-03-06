@@ -1,41 +1,24 @@
-from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtWidgets import *
+# -*- coding: utf-8 -*-
 
-DEFAULT_PARAMS = {'n_of_clusts': 1, 'cols_to_clust': [], 'criterion': "maxclust", 'method': "average",
-                  'metric': "euclidean"}
+# Form implementation generated from reading ui file 'statclustmaket.ui'
+#
+# Created by: PyQt5 UI code generator 5.12
+#
+# WARNING! All changes made in this file will be lost!
+
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class ClustSettDialog(QDialog):
-    def __init__(self, analysis_options):
-        super().__init__()
-        self.setup_ui()
-        self.retranslate_ui()
-
-        self.params = (False, DEFAULT_PARAMS)
-
-        self.nOfClustersBox.setValue(DEFAULT_PARAMS['n_of_clusts'])
-
-        self.columnsToClustList.addItems(analysis_options["data_columns"])
-        self.columnsToClustList.setSelectionMode(QtWidgets.QAbstractItemView.MultiSelection)
-
-        self.criterionBox.addItems(analysis_options["criterions"])
-        self.criterionBox.setCurrentText(DEFAULT_PARAMS["criterion"])
-        self.methodBox.addItems(analysis_options["methods"])
-        self.methodBox.setCurrentText(DEFAULT_PARAMS["method"])
-        self.metricBox.addItems(analysis_options["metrics"])
-        self.metricBox.setCurrentText(DEFAULT_PARAMS["metric"])
-
-        self.clusterRunButtons.accepted.connect(lambda: self.save_and_close())
-        self.clusterRunButtons.rejected.connect(lambda: self.close())
-
-    def setup_ui(self):
-        self.resize(510, 379)
-        self.clusterRunButtons = QtWidgets.QDialogButtonBox(self)
+class Ui_Dialog(object):
+    def setupUi(self, Dialog):
+        Dialog.setObjectName("Dialog")
+        Dialog.resize(510, 379)
+        self.clusterRunButtons = QtWidgets.QDialogButtonBox(Dialog)
         self.clusterRunButtons.setGeometry(QtCore.QRect(320, 330, 161, 32))
         self.clusterRunButtons.setOrientation(QtCore.Qt.Horizontal)
-        self.clusterRunButtons.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
+        self.clusterRunButtons.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
         self.clusterRunButtons.setObjectName("clusterRunButtons")
-        self.horizontalLayoutWidget = QtWidgets.QWidget(self)
+        self.horizontalLayoutWidget = QtWidgets.QWidget(Dialog)
         self.horizontalLayoutWidget.setGeometry(QtCore.QRect(9, 9, 491, 311))
         self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
         self.mainLay = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
@@ -90,7 +73,6 @@ class ClustSettDialog(QDialog):
         self.nOfClustersLayout.addWidget(self.nOfClustersLabel)
         self.nOfClustersBox = QtWidgets.QSpinBox(self.horizontalLayoutWidget)
         self.nOfClustersBox.setObjectName("nOfClustersBox")
-        self.nOfClustersBox.setMinimum(1)
         self.nOfClustersLayout.addWidget(self.nOfClustersBox)
         self.rightLay.addLayout(self.nOfClustersLayout)
         self.columnsToClustLayout = QtWidgets.QVBoxLayout()
@@ -109,40 +91,18 @@ class ClustSettDialog(QDialog):
         self.rightLay.addLayout(self.columnsToClustLayout)
         self.mainLay.addLayout(self.rightLay)
 
-        QtCore.QMetaObject.connectSlotsByName(self)
+        self.retranslateUi(Dialog)
+        self.clusterRunButtons.accepted.connect(Dialog.accept)
+        self.clusterRunButtons.rejected.connect(Dialog.reject)
+        QtCore.QMetaObject.connectSlotsByName(Dialog)
 
-    def retranslate_ui(self):
+    def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        self.setWindowTitle(_translate("ClusterSettingsDial", "Настройки кластеризации"))
-        self.criterionLabel.setText(_translate("ClusterSettingsDial", "Критерий кластеризации"))
-        self.methodLabel.setText(_translate("ClusterSettingsDial", "Метод кластеризации"))
-        self.metricLabel.setText(_translate("ClusterSettingsDial", "Метрика кластеризации"))
-        self.nOfClustersLabel.setText(_translate("ClusterSettingsDial", "Число кластеров"))
-        self.columnsToClustLabel.setText(_translate("ClusterSettingsDial", "Столбцы для кластеризации"))
-
-    def save_and_close(self):
-        self.params = (True, self.get_params())
-        self.close()
-
-    def get_params(self):
-        return {
-            'n_of_clusts': self.nOfClustersBox.value(),
-            'cols_to_clust': [col.text() for col in self.columnsToClustList.selectedItems()],
-            'criterion': self.criterionBox.currentText(),
-            'method': self.methodBox.currentText(),
-            'metric': self.metricBox.currentText()
-        }
-
-    @staticmethod
-    def get_clust_settings(data_columns):
-        dlg = ClustSettDialog(data_columns)
-        dlg.exec_()
-        return dlg.params
+        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        self.criterionLabel.setText(_translate("Dialog", "Критерий кластеризации"))
+        self.methodLabel.setText(_translate("Dialog", "Метод кластеризации"))
+        self.metricLabel.setText(_translate("Dialog", "Метрика кластеризации"))
+        self.nOfClustersLabel.setText(_translate("Dialog", "Число кластеров"))
+        self.columnsToClustLabel.setText(_translate("Dialog", "Столбцы для кластеризации"))
 
 
-if __name__ == "__main__":
-    app = QApplication([])
-    app.setApplicationName("ClustSettDial")
-    cont, pars = ClustSettDialog.get_clust_settings(['Alpha', 'Beta', 'Gamma'])
-    print(cont)
-    print(pars)
