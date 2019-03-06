@@ -3,12 +3,15 @@ from PyQt5 import QtCore, QtGui
 from PyQt5.QtWidgets import *
 from StatMainWindow import Ui_MainWindow
 from ClustSettDialog import ClustSettDialog
+from ColumnsScatterPlotDialog import ScatterPlotColumnsDialog
 import sys
 import pandas as pd
 
 from scipy.cluster.hierarchy import dendrogram
 from matplotlib import pyplot as plt
 
+import numpy as np
+from itertools import cycle, islice
 
 class WindowInterface(QMainWindow, Ui_MainWindow):
 
@@ -99,7 +102,7 @@ class WindowInterface(QMainWindow, Ui_MainWindow):
                                            "CSV-файл (*.csv) ;;Лист Excel (*.xls) ;; Лист Excel (*.xlsx)")[0]
         if path:
             try:
-                self.analyser.save_data(path, pd.DataFrame(self.analyser.distance_matrix))
+                self.analyser.save_data(savepath=path, data=pd.DataFrame(self.analyser.distance_matrix))
             except analytic.UnknownTypeError as e:
                 self.report_error("Неподдерживаемый тип файла: " + e.filetype)
                 return
@@ -162,7 +165,21 @@ class WindowInterface(QMainWindow, Ui_MainWindow):
         """
         Выводит график рассеяния данных
         """
-        pass
+        columns = ScatterPlotColumnsDialog.get_columns(self.analyser.source_data.columns)
+        if columns:
+            colors = np.array(list(islice(cycle(['#377eb8', '#ff7f00', '#4daf4a',
+                                                 '#f781bf', '#a65628', '#984ea3',
+                                                 '#999999', '#e41a1c', '#dede00']),
+                                          int(max(self.analyser.clustered_data["cluster"]) + 1))))
+            try:
+                plt.scatter(x=self.analyser.source_data[columns["x_axis_column"]],
+                            y=self.analyser.source_data[columns["y_axis_column"]],
+                            color=colors[self.analyser.clustered_data["cluster"]])
+                plt.xlabel(columns["x_axis_column"])
+                plt.ylabel(columns["y_axis_column"])
+                plt.show()
+            except Exception as e:
+                self.report_error(str(e))
 
     class DataFrameView(QTableView):
         def __init__(self, data: pd.DataFrame, name: str):

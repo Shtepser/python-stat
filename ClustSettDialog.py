@@ -134,8 +134,8 @@ class ClustSettDialog(QDialog):
         }
 
     @staticmethod
-    def get_clust_settings(data_columns):
-        dlg = ClustSettDialog(data_columns)
+    def get_clust_settings(options):
+        dlg = ClustSettDialog(options)
         dlg.exec_()
         return dlg.params
 

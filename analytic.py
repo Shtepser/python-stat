@@ -114,6 +114,8 @@ class Analytic:
             raise UnknownTypeError(file_ext)
 
     def save_data(self, savepath, data: pd.DataFrame):
+        print(savepath)
+        print(data)
         file_ext = re.search(r'\.[\w\d]+$', savepath)[0]  # расширение файла
         types = {
             ".xlsx": lambda path: data.to_excel(path),
