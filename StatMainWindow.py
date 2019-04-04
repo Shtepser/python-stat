@@ -9,6 +9,10 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
+def getManualPage():
+    return QtCore.QUrl("man_files/index.html")
+
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -75,13 +79,11 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Stat"))
-        self.readme_browser.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-"<p align=\"justify\" style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt;\">Здесь будет инструкция пользователя. Когда-нибудь.</span></p>\n"
-"<p align=\"justify\" style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; color:#000000;\">В настоящий момент программа реализует иерархическую кластеризацию</span></p></body></html>"))
-        self.dataTabs.setTabText(self.dataTabs.indexOf(self.readme_tab), _translate("MainWindow", "Стартовая страница"))
+
+        self.readme_browser.setSource(getManualPage())
+        self.readme_browser.setSearchPaths(["man_files"])
+
+        self.dataTabs.setTabText(self.dataTabs.indexOf(self.readme_tab), _translate("MainWindow", "Руководство"))
         self.dataMenu.setTitle(_translate("MainWindow", "Данные"))
         self.export_data_menu.setTitle(_translate("MainWindow", "Экспортировать"))
         self.analysisMenu.setTitle(_translate("MainWindow", "Анализ"))

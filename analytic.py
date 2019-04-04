@@ -3,7 +3,6 @@ import re
 from copy import deepcopy
 from scipy.spatial.distance import pdist, squareform
 from scipy.cluster.hierarchy import linkage, fcluster
-import numpy as np
 
 
 class UnknownTypeError(Exception):
@@ -25,7 +24,7 @@ class IncorrectNumberOfClustersError(Exception):
 # TODO: переписать под enumerate
 METHODS = ["single", "complete", "average", "weighted", "centroid", "median", "ward"]
 METRICS = ["euclidean", "sqeuclidean", "cityblock"]
-CRITERIONS = ["maxclust", "maxclust_monocrit"]
+CRITERIONS = ["maxclust"]
 
 
 class Analytic:

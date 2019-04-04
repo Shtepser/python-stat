@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <title>Кластерный анализ</title>
+    </head>
+    <body>
+        <a href="index.html">На главную</a><br>
+        <h2>Кластерный анализ</h2><br>
+        <section>
+            <i>Кластерный анализ</i> - упорядочивание объектов (наблюдений), о каждом из которых имеется информация по нескольким параметрам (переменным) в сравнительно однородные группы (кластеры).
+            В настоящий момент кластеризация осуществляется на основе иерархического подхода, предполагающего наличие вложенных групп (кластеров различного порядка).
+            Для разделения объектов на кластеры строится матрица близости, определяющая, насколько сильны различия между каждой из пар объектов.
+        </section> <br>
+        <h2>Параметры кластеризации</h2>
+        <h3>Критерий кластеризации</h3>
+
+        <section>
+            <p>Способ формирования кластеров</p><br>
+            <i>maxclust</i> - формирует кластеры, последовательно соединяя элементы до тех пор, пока не будет сформировано заданное число кластеров
+        </section>
+        <h3>Метод кластеризации</h3>
+
+        <section>
+            <p>Способ, которым вычисляется расстояние между кластерами</p><br>
+            <i>Метод ближнего соседа (single)</i> - расстояние между двумя кластерами определяется расстоянием между двумя наиболее близкими объектами (ближайшими соседями) в различных кластерах. Это правило должно, в известном смысле, нанизывать объекты вместе для формирования кластеров, и результирующие кластеры имеют тенденцию быть представленными длинными "цепочками".
+            <br>
+            <span class="MJX_Assistive_MathML MJX_Assistive_MathML_Block" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>d</mi><mo stretchy="false">(</mo><mi>u</mi><mo>,</mo><mi>v</mi><mo stretchy="false">)</mo><mo>=</mo><mo movablelimits="true" form="prefix">min</mo><mo stretchy="false">(</mo><mi>d</mi><mi>i</mi><mi>s</mi><mi>t</mi><mo stretchy="false">(</mo><mi>u</mi><mo stretchy="false">[</mo><mi>i</mi><mo stretchy="false">]</mo><mo>,</mo><mi>v</mi><mo stretchy="false">[</mo><mi>j</mi><mo stretchy="false">]</mo><mo stretchy="false">)</mo><mo stretchy="false">)</mo></math></span>
+            <br><br>
+
+            <i>Метод дальнего соседа (complete)</i> - расстояния между кластерами определяются наибольшим расстоянием между любыми двумя объектами в различных кластерах (т.е. "наиболее удаленными соседями"). Этот метод обычно работает очень хорошо, когда объекты происходят на самом деле из реально различных "рощ". Если же кластеры имеют в некотором роде удлиненную форму или их естественный тип является "цепочечным", то этот метод непригоден.
+            <br>
+            <span class="MJX_Assistive_MathML MJX_Assistive_MathML_Block" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>d</mi><mo stretchy="false">(</mo><mi>u</mi><mo>,</mo><mi>v</mi><mo stretchy="false">)</mo><mo>=</mo><mo movablelimits="true" form="prefix">max</mo><mo stretchy="false">(</mo><mi>d</mi><mi>i</mi><mi>s</mi><mi>t</mi><mo stretchy="false">(</mo><mi>u</mi><mo stretchy="false">[</mo><mi>i</mi><mo stretchy="false">]</mo><mo>,</mo><mi>v</mi><mo stretchy="false">[</mo><mi>j</mi><mo stretchy="false">]</mo><mo stretchy="false">)</mo><mo stretchy="false">)</mo></math></span>
+            <br><br>
+
+            <i>Метод средней связи (average)</i> - расстояние между двумя различными кластерами вычисляется как среднее расстояние между всеми парами объектов в них. Метод эффективен, когда объекты в действительности формируют различные "рощи", однако он работает одинаково хорошо и в случаях протяженных ("цепочного" типа) кластеров
+            <br>
+            <span class="MJX_Assistive_MathML MJX_Assistive_MathML_Block" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>d</mi><mo stretchy="false">(</mo><mi>u</mi><mo>,</mo><mi>v</mi><mo stretchy="false">)</mo><mo>=</mo><munder><mo>∑</mo><mrow class="MJX-TeXAtom-ORD"><mi>i</mi><mi>j</mi></mrow></munder><mfrac><mrow><mi>d</mi><mo stretchy="false">(</mo><mi>u</mi><mo stretchy="false">[</mo><mi>i</mi><mo stretchy="false">]</mo><mo>,</mo><mi>v</mi><mo stretchy="false">[</mo><mi>j</mi><mo stretchy="false">]</mo><mo stretchy="false">)</mo></mrow><mrow><mo stretchy="false">(</mo><mrow class="MJX-TeXAtom-ORD"><mo stretchy="false">|</mo></mrow><mi>u</mi><mrow class="MJX-TeXAtom-ORD"><mo stretchy="false">|</mo></mrow><mo>∗</mo><mrow class="MJX-TeXAtom-ORD"><mo stretchy="false">|</mo></mrow><mi>v</mi><mrow class="MJX-TeXAtom-ORD"><mo stretchy="false">|</mo></mrow><mo stretchy="false">)</mo></mrow></mfrac></math></span>
+        </section>
+
+        <h3>Метрика кластеризации</h3>
+
+        <section>
+            <p>Способ расчёта разницы (расстояния) между наблюдениями</p>
+            <i>Простое Эвклидово расстояние (euclidean)</i> - простое геометрическое расстояние в многомерном пространстве
+            <br>
+            p(x,y) = sqrt(∑(xi - yi)^2)
+            <br><br>
+
+            <i>Квадрат Эвклидова расстояния (sqeuclidean)</i> - в отличие от простого Эвклидова расстояния, придаёт большие веса удалённым объектам
+            <br>
+            p(x,y) = ∑(xi - yi)^2
+            <br><br>
+
+            <i>Расстояние городских кварталов (cityblock)</i> - среднее разностей по координатам. В большинстве случаев эта мера расстояния приводит к таким же результатам, как и для обычного расстояния Евклида. Однако отметим, что для этой меры влияние отдельных больших разностей (выбросов) уменьшается (так как они не возводятся в квадрат)
+            <br>
+            p(x,y) = ∑|xi - yi|
+            <br><br>
+        </section>
+        <h3>Число кластеров</h3><br>
+        <section>
+            Для того, чтобы проставить метки кластеров, можно задать число предполагаемых в наблюдениях кластеров
+        </section>
+    </body>
+</html>
